@@ -2,6 +2,8 @@
 # Real Time Indoor Navigation for Android Phones
 
 # Overview
+ * Live demo at http://trillworks.com:3010
+ * Send fake phone data from http://trillworks.com:3010/fakephone
  * Send JSON-encoded post requests to /coordinates
  * Data must look like this:
 	
