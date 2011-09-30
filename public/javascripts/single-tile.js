@@ -4,9 +4,9 @@ var map = new OpenLayers.Map({
     layers: [
         new OpenLayers.Layer.Image(
             "Single Tile", 
-            "floorplan.jpg",
-            new OpenLayers.Bounds(-360, -180, 360, 180),
-            new OpenLayers.Size(425, 318)
+            "ens_2.jpg",
+            new OpenLayers.Bounds(-640, -898, 640, 898),
+            new OpenLayers.Size(425, 318) //1279 1795
         )
     ],
     center: new OpenLayers.LonLat(6.5, 40.5),
@@ -43,11 +43,12 @@ map.addControl(new OpenLayers.Control.LayerSwitcher());
         var json = {
             x:          x,
             y:          y,
-            device_id: "gumbo"
+            device_id: "gumbo",
+            time: new Date()
         };
         //console.log("posting: " + json.x);
         $.post("/coordinates", json, function(data){
-            //console.log(data);
+            console.log(data);
         });
     }
 
@@ -80,7 +81,7 @@ map.addControl(new OpenLayers.Control.LayerSwitcher());
         });
 
         $("#start_fakephone").click(function(){
-           interval_id = setInterval(generateCoordinates, 200); 
+           interval_id = setInterval(generateCoordinates, 500); 
            $("#coordinate_list").append("<li>Generating Coordinates</li>");
         });
         $("#stop_fakephone").click(function(){
