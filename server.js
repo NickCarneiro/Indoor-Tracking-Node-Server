@@ -30,7 +30,7 @@ var express = require('express'),
     colors = require('colors'),
     sys = require('sys'),
     mime = require('mime'),
-    app = module.exports = express.createServer()
+    app = module.exports = express.createServer(),
     io = require('socket.io').listen(app);
 
 
@@ -160,13 +160,15 @@ app.use(function(err, req, res, next){
 app.get('/', function(req, res) {
   res.render('index', {
     title: 'Senior Design 2011: Map digitization',
-    description: 'Default template for writing code quickly.'
+    description: 'Default template for writing code quickly.',
+    scripts: ["map.js"]
   });
 });
 
 app.get('/fakephone', function(req, res){
   res.render('fakephone', {
-    title: "Generate fake coordinates"
+    title: "Generate fake coordinates",
+    scripts: ["fakephone.js"]
   });
 
 });

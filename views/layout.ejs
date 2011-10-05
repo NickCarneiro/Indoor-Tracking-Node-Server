@@ -47,7 +47,7 @@
 
     </header>
     <div id="main" role="main">
-	<%- body %>
+  <%- body %>
     </div>
     <footer>
 
@@ -72,12 +72,14 @@
   <script defer src="javascripts/script.js"></script>
     <script src="javascripts/OpenLayers.js"></script>
     <script src="javascripts/socket.io.min.js"></script>
-        <script src="javascripts/single-tile.js"></script>
+    <% for(var i=0; i<scripts.length; i++) {%>
+      <script src="javascripts/<%= scripts[i] %>"></script>
+    <% } %>
 
   
   <!-- end scripts-->
 
-	
+  
   <!-- Change UA-XXXXX-X to be your site's ID -->
   <script>
     window._gaq = [['_setAccount','UAXXXXXXXX1'],['_trackPageview'],['_trackPageLoadTime']];
