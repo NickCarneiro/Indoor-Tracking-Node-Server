@@ -22,60 +22,95 @@ var markers = new OpenLayers.Layer.Markers( "Markers" );
 map.addLayer(markers);
   
 setInterval("deleteOldMarkers(10)", 5000);
-    $(function(){
+$(function(){
 
-        var socket = io.connect('http://trillworks.com:3010');
+    var socket = io.connect('http://trillworks.com:3010');
+    
+    socket.on('coordinates', function (data) {
+        //console.log("data returned: " + data);
+        //console.log("coordinates event: " + data.x);
         
-        socket.on('coordinates', function (data) {
-            //console.log("data returned: " + data);
-            //console.log("coordinates event: " + data.x);
-            
-            //TODO: validate data fields
-            
-            //see if marker with device_id exists
-            //this is an O(n) search that should be changed to an O(1) 
-            //lookup to support large numbers of phones
-            for(var i = 0; i < markers.markers.length; i++){
-                if(markers.markers[i].device_id == data.device_id){
-                    //found marker for this phone. update location and timestamp.
-                    var marker = markers.markers[i];
-                    marker.timestamp = new Date();
-                    //console.log(marker);
-                    marker.moveTo( 
-                        map.getLayerPxFromViewPortPx(
-                        map.getPixelFromLonLat(
-                            new OpenLayers.LonLat(data.x, data.y)
-                            )
-                        )
-                    );
-
-                    return;
-
-                }
-            }
-
-            //no marker with this id found. add a new one.
-            //easy to abuse: sent requests to server with lots of fake ID's.
-            console.log("adding marker for " + data.device_id + " at :  "+ data.x  );
-
-            var marker = new OpenLayers.Marker(new OpenLayers.LonLat(data.x, data.y));
-            marker.device_id = data.device_id;
-            marker.timestamp = new Date();
-            //console.log(marker);
-            markers.addMarker(marker);
-            marker.moveTo( 
-                map.getLayerPxFromViewPortPx(
+        //TODO: validate data fields
+        
+        //see if marker with device_id exists
+        //this is an O(n) search that should be changed to an O(1) 
+        //lookup to support large numbers of phones
+        for(var i = 0; i < markers.markers.length; i++){
+            if(markers.markers[i].device_id == data.device_id){
+                //found marker for this phone. update location and timestamp.
+                var marker = markers.markers[i];
+                marker.timestamp = new Date();
+                //console.log(marker);
+                marker.moveTo( 
+                    map.getLayerPxFromViewPortPx(
                     map.getPixelFromLonLat(
                         new OpenLayers.LonLat(data.x, data.y)
+                        )
                     )
+                );
+
+                return;
+
+            }
+        }
+
+        //no marker with this id found. add a new one.
+        //easy to abuse: sent requests to server with lots of fake ID's.
+        console.log("adding marker for " + data.device_id + " at :  "+ data.x  );
+
+        var marker = new OpenLayers.Marker(new OpenLayers.LonLat(data.x, data.y));
+        marker.device_id = data.device_id;
+        marker.timestamp = new Date();
+        //console.log(marker);
+        markers.addMarker(marker);
+        marker.moveTo( 
+            map.getLayerPxFromViewPortPx(
+                map.getPixelFromLonLat(
+                    new OpenLayers.LonLat(data.x, data.y)
                 )
-            );
-            
-           
-            
-            
-        });
+            )
+        );
+        
+       
+        
+        
     });
+
+    $("#move_marker").click(function(){
+        //move test marker
+        var x = $("#x_pos").val();
+        var y = $("#y_pos").val();
+        //check for existing test marker, move it if it exists
+        for(var i = 0; i < markers.markers.length; i++){
+       //console.log(new Date().getTime() - markers.markers[i].timestamp.getTime());
+    
+            if(markers.markers[i].device_id == "test_marker"){
+                
+                markers.markers[i].moveTo( 
+                    map.getLayerPxFromViewPortPx(
+		                map.getPixelFromLonLat(
+		                    new OpenLayers.LonLat(x, y)
+		                )
+            		)
+        		); 
+                return;
+            }
+        }
+
+        //didn't find test_marker. Make new one.
+        var marker = new OpenLayers.Marker(new OpenLayers.LonLat(x, y));
+        marker.device_id = "test_marker";
+        marker.timestamp = new Date();
+        markers.addMarker(marker);
+        marker.moveTo( 
+            map.getLayerPxFromViewPortPx(
+                map.getPixelFromLonLat(
+                    new OpenLayers.LonLat(x, y)
+                )
+            )
+        );
+    });
+});
 
 //delete markers older than period seconds
 function deleteOldMarkers(period){
