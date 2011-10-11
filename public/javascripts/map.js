@@ -20,7 +20,7 @@ map.addControl(new OpenLayers.Control.LayerSwitcher());
 
 var markers = new OpenLayers.Layer.Markers( "Markers" );
 map.addLayer(markers);
-  
+
 setInterval("deleteOldMarkers(10)", 5000);
 $(function(){
 
