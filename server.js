@@ -31,7 +31,8 @@ var express = require('express'),
 		sys = require('sys'),
 		mime = require('mime'),
 		app = module.exports = express.createServer(),
-		io = require('socket.io').listen(app);
+		io = require('socket.io').listen(app),
+		db = require('mongojs').connect("mongodb://localhost/itpn", ["coordinates"]);
 
 
 /*===========================================================================
@@ -186,8 +187,9 @@ res.send("Thanks for " + req.body.x);
 		};
 		//console.log("emitting coordinates event " + coords.x);
 
-		io.sockets.emit('coordinates', coords);
-		
+	io.sockets.emit('coordinates', coords);
+	coords.time = Date.now();
+	db.coordinates.insert(coords);	
 });
 
 
