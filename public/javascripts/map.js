@@ -3,11 +3,18 @@ var map = new OpenLayers.Map({
 	div: "mapDiv",
 	layers: [
 		new OpenLayers.Layer.Image(
-			"Single Tile", 
+			"Sixth Floor", 
+			"ens_6.jpg",
+			new OpenLayers.Bounds(-640, -898, 640, 898),
+			new OpenLayers.Size(425, 318) //1279 1795
+		),
+		new OpenLayers.Layer.Image(
+			"Second Floor", 
 			"ens_2.jpg",
 			new OpenLayers.Bounds(-640, -898, 640, 898),
 			new OpenLayers.Size(425, 318) //1279 1795
 		)
+
 	],
 	center: new OpenLayers.LonLat(6.5, 40.5),
 	zoom: 1
