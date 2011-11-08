@@ -1,4 +1,38 @@
 
+OpenLayers.Control.Click = OpenLayers.Class(OpenLayers.Control, {                
+                defaultHandlerOptions: {
+                    'single': true,
+                    'double': false,
+                    'pixelTolerance': 0,
+                    'stopSingle': false,
+                    'stopDouble': false
+                },
+
+                initialize: function(options) {
+                    this.handlerOptions = OpenLayers.Util.extend(
+                        {}, this.defaultHandlerOptions
+                    );
+                    OpenLayers.Control.prototype.initialize.apply(
+                        this, arguments
+                    ); 
+                    this.handler = new OpenLayers.Handler.Click(
+                        this, {
+                            'click': this.trigger
+                        }, this.handlerOptions
+                    );
+                }, 
+
+                trigger: function(e) {
+
+                    var lonlat = map.getLonLatFromViewPortPx(e.xy);
+                    
+                   $("#x_pos").val(lonlat.lon);
+                   $("#y_pos").val(lonlat.lat);
+                   
+                }
+
+            });
+
 var map = new OpenLayers.Map({
 	div: "mapDiv",
 	layers: [
@@ -20,6 +54,8 @@ var map = new OpenLayers.Map({
 	zoom: 1
 });
 
+
+
 OpenLayers.Marker.prototype.device_id = "no_device_id_set";
 OpenLayers.Marker.prototype.timestamp = null;
 
@@ -28,6 +64,11 @@ map.addControl(new OpenLayers.Control.LayerSwitcher());
 var markers = new OpenLayers.Layer.Markers( "Markers" );
 map.addLayer(markers);
 
+
+var click = new OpenLayers.Control.Click();
+                map.addControl(click);
+                click.activate();
+
 setInterval("deleteOldMarkers(10)", 5000);
 $(function(){
 
@@ -35,7 +76,7 @@ $(function(){
 	
 	socket.on('coordinates', function (data) {
 		//console.log("data returned: " + data);
-		//console.log("coordinates event: " + data.x);
+		console.log("coordinates event: " + data.x + " " + data.y);
 		
 		//TODO: validate data fields
 		
@@ -52,6 +93,7 @@ $(function(){
 					map.getLayerPxFromViewPortPx(
 					map.getPixelFromLonLat(
 						new OpenLayers.LonLat(data.x, data.y)
+						
 						)
 					)
 				);
@@ -121,7 +163,7 @@ $(function(){
 
 //delete markers older than period seconds
 function deleteOldMarkers(period){
-	console.log("checking for markers older than " + period + " seconds");
+	//console.log("checking for markers older than " + period + " seconds");
 	for(var i = 0; i < markers.markers.length; i++){
 	   //console.log(new Date().getTime() - markers.markers[i].timestamp.getTime());
 	

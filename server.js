@@ -177,7 +177,7 @@ app.get('/fakephone', function(req, res){
 
 
 app.post('/coordinates' , function(req, res){
-//console.log(req.body.x);
+console.log(req.body);
 res.send("Thanks for " + req.body.x);
 
 	var coords = {
@@ -192,7 +192,9 @@ res.send("Thanks for " + req.body.x);
 	db.coordinates.insert(coords);	
 });
 
-
+app.get('/coordinates' , function(req, res){
+	res.send("You should only send post requests here.")
+});
 
 
 	
